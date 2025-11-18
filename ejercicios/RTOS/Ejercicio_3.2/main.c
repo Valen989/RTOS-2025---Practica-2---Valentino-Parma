@@ -3,7 +3,7 @@
  *  Valentino Parma
  *  2025
  *  Practica N°2
- *  Ejercicio 3
+ *  Ejercicio 2
  *
  ************************************************************************************/
 
@@ -21,82 +21,69 @@
 #define mainDELAY_LOOP_COUNT    ( 0xffffff )
 
 
-/*-----------------------------------------------------------*/
 
-
-char frase1[] = "Tarea 1 ejecutando \n";
-
-char frase2[] = "Tarea 2 ejecutando \n";
-
-char frase3[] = "Tarea periódica ejecutando\n";
-
-/* Prototipos */
-void vTask1(void* pvParameters);
-
-void vTareaPeriodica(void* pvParameters);
-
-
-
-
+/* Prototipos de las tareas */
+void vTaskA(void* pvParameters);
+void vTaskB(void* pvParameters);
+void vTaskC(void* pvParameters);
 
 int main(void)
 {
-    /* Creación de una tarea. */
-    xTaskCreate(vTask1,   /* Puntero a la función que implimenta la tarea. */
-        "Task 1", /* Nombre de texto de la tarea, solo se usa en debugging. */
-        1000,     /* Profundidad de la pila - la mayoria de los microcontroladores chicos usan mucho menos que esto. */
-        frase1,     /* parámetros de tarea. */
-        1,        /* Esta tarea se ejecutará en prioridad 1. */
-        NULL);   /* No usamos handle de tarea. */
+    /* Crear las tareas continuas con prioridad 1 */
+    xTaskCreate(vTaskA, "TaskA", 400, "Tarea 1 ejecutando\n", 1, NULL);
+    xTaskCreate(vTaskB, "TaskB", 400 , "Tarea 2 ejecutando\n", 1, NULL);
 
-    /* Creación de una tarea. */
-    xTaskCreate(vTask1,   /* Puntero a la función que implimenta la tarea. */
-        "Task 2", /* Nombre de texto de la tarea, solo se usa en debugging. */
-        1000,     /* Profundidad de la pila - la mayoria de los microcontroladores chicos usan mucho menos que esto. */
-        frase2,     /* parámetros de tarea. */
-        1,        /* Esta tarea se ejecutará en prioridad 1. */
-        NULL);   /* No usamos handle de tarea. */
+    /* Crear la tarea periódica con prioridad 2 */
+    xTaskCreate(vTaskC, "TaskC", 400 , "Tarea periodica ejecutando\n", 2, NULL);
 
-    /* Tarea periódica con vTaskDelayUntil(), prioridad 2 */
-    xTaskCreate(vTareaPeriodica, "Tarea 3", 1000, frase3, 2, NULL);
-
-
-    /* Arranque del scheduler. */
+    /* Iniciar el planificador */
     vTaskStartScheduler();
 
-    vPrintString("Inicio scheduler");
+    /* Nunca debería llegar aquí */
+    for (;;);
 
-    /* Esta linea no debería ser alcanzada porque vTaskStartScheduler()
-    *  solo retornará si no hay suficiente memoria en la heap de FreeRTOS disponible para
-    *  crear la tarea Idle. */
-    for (; ; )
-    {
-    }
-
-
-}
-/*-----------------------------------------------------------*/
-
-
-/* Tareas continuas: imprimen sin demoras */
-void vTask1(void* pvParameters)
-{
-    for (;;)
-    {
-        vPrintString(pvParameters);
-        /* Sin delay */
-    }
+    
+   
 }
 
-/* Tarea periódica: imprime cada 200 ms */
-void vTareaPeriodica(void* pvParameters)
+/* Tarea A: imprime continuamente */
+void vTaskA(void* pvParameters)
 {
-    TickType_t xLastWakeTime = xTaskGetTickCount();
-    const TickType_t xPeriod = pdMS_TO_TICKS(200);
+    const char* msg = (const char*)pvParameters;
 
     for (;;)
     {
-        vPrintString(pvParameters);
+        vPrintString(msg);
+    }
+}
+
+/* Tarea B: imprime continuamente */
+void vTaskB(void* pvParameters)
+{
+    const char* msg = (const char*)pvParameters;
+
+    for (;;)
+    {
+        vPrintString(msg);
+    }
+}
+
+/* Tarea C: periódica con prioridad 2 */
+void vTaskC(void* pvParameters)
+{
+    const char* msg = (const char*)pvParameters;
+
+    TickType_t xLastWakeTime;
+    const TickType_t xPeriod = pdMS_TO_TICKS(10); 
+
+    /* Inicializar referencia de tiempo */
+    xLastWakeTime = xTaskGetTickCount();
+
+    for (;;)
+    {
+        vPrintString(msg);
+
+        /* Bloquear hasta el siguiente periodo */
         vTaskDelayUntil(&xLastWakeTime, xPeriod);
     }
 }

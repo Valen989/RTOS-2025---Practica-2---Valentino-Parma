@@ -1,2 +1,10 @@
-﻿  main.c
-  Ejercicio_1.2.vcxproj -> C:\Users\Terciario\Desktop\sist operaativos\RTOS-2025---Practica-2---Valentino-Parma\ejercicios\RTOS\Ejercicio_1.2\x64\Debug\Ejercicio_1.2.exe
+﻿  event_groups.c
+  heap_4.c
+  list.c
+  main.c
+  port.c
+  queue.c
+  supporting_functions.c
+  tasks.c
+  Generando código...
+  Ejercicio_1.2.vcxproj -> D:\escritorio\RTOS-2025---Practica-2---Valentino-Parma\ejercicios\RTOS\Ejercicio_1.2\x64\Debug\Ejercicio_1.2.exe

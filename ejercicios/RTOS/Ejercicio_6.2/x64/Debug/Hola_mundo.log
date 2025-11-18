@@ -1,0 +1,9 @@
+﻿  event_groups.c
+  heap_4.c
+  list.c
+  port.c
+  queue.c
+  supporting_functions.c
+  tasks.c
+  Generando código...
+  Hola_mundo.vcxproj -> D:\escritorio\sistemas operativos\hola mundo\Practica_RTOS\x64\Debug\Hola_mundo.exe
